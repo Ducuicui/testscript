@@ -48,8 +48,6 @@ def adbcmd(action,path=None,t_path=None):
     else:
         raise Exception('commands is unsupported,only support [push,pull,cat,refresh,ls,launch,delete,export] now')
 
-
-
 def refreshMedia(path):
     p = _shellcmd('am broadcast -a android.intent.action.MEDIA_MOUNTED -d file://' + path)
     out = p.stdout.read().strip()
@@ -91,16 +89,11 @@ def pushpullFile(action,path,t_path):
     else:
         return False
 
-
-
-
 def exportANDROID_SERIAL():
     #get device number
     device_number = _getDeviceNumber()
     #export ANDROID_SERIAL=xxxxxxxx
     os.environ[ANDROID_SERIAL] = device_number
-
-
 
 def _getDeviceNumber():
     #get device number, only support 1 device now
@@ -140,7 +133,6 @@ def _getApplicationActivity(app):
 '''
 
 
-
 def _shellcmd(func):
     #export ANDROID_SERIAL=xxxxx
     #run exportANDROID_SERIAL() before
@@ -153,8 +145,4 @@ def _cmd(func):
     cmd = ADB + ' ' + func
     return subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
-
-
-if __name__ == '__main__':
-    adbcmd('ls','/sdcard/')
 
