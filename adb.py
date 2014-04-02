@@ -15,19 +15,19 @@ ANDROID_SERIAL='ANDROID_SERIAL'
 '''
 This method support user execute adb commands,support push,pull,cat,refresh,ls,launch,delete,export
 usage:  
------------------------------------------------------------------------------------------------------------
-| adbcmd('cat','xxxx/xxx.xml')                 |  adb shell cat xxxx/xxx.xml,return cat result            | 
------------------------------------------------------------------------------------------------------------
-| adbcmd('refresh','/sdcard/')                 |  refresh media file under path /sdcard/,return ture/false|
------------------------------------------------------------------------------------------------------------
-| adbcmd('ls','/sdcard/')                      |  get the file number under path /sdcard/,return number   |                         
------------------------------------------------------------------------------------------------------------    
-| adbcmd('delete','xxxx/xxxx.jpg')             |  delete xxxx/xxx.jpg,return true/false                   |
------------------------------------------------------------------------------------------------------------ 
-| adbcmd('export')                             |  export ANDROID_SERIAL,only support 1 device             |
------------------------------------------------------------------------------------------------------------ 
-| adbcmd('launch','com.intel.camera22/.Camera')|  launch social camera app,return adb commands            |
------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+| adbcmd('cat','xxxx/xxx.xml')                 |  adb shell cat xxxx/xxx.xml,return cat result             | 
+------------------------------------------------------------------------------------------------------------
+| adbcmd('refresh','/sdcard/')                 |  refresh media file under path /sdcard/,return ture/false |
+------------------------------------------------------------------------------------------------------------
+| adbcmd('ls','/sdcard/')                      |  get the file number under path /sdcard/,return number    |                         
+------------------------------------------------------------------------------------------------------------    
+| adbcmd('delete','xxxx/xxxx.jpg')             |  delete xxxx/xxx.jpg,return true/false                    |
+------------------------------------------------------------------------------------------------------------ 
+| adbcmd('export')                             |  export ANDROID_SERIAL,only support 1 device              |
+------------------------------------------------------------------------------------------------------------ 
+| adbcmd('launch','com.intel.camera22/.Camera')|  launch social camera app,return adb commands             |
+------------------------------------------------------------------------------------------------------------
 '''
 
 def adbcmd(action,path=None,t_path=None):
