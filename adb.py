@@ -12,7 +12,7 @@ ADB_DEVICES = ADB + ' devices'
 ANDROID_SERIAL='ANDROID_SERIAL'
 
 '''
-This method support user execute adb commands,support push,pull,cat,refresh,ls,launch,delete
+This method support user execute adb commands,support push,pull,cat,refresh,ls,launch,rm
 
 usage:  adb=Adb()
 ------------------------------------------------------------------------------------------------------------
@@ -50,7 +50,7 @@ class Adb():
         elif action in action2:
             self._pushpullFile(action,path,t_path)
         else:
-            raise Exception('commands is unsupported,only support [push,pull,cat,refresh,ls,launch,delete] now')
+            raise Exception('commands is unsupported,only support [push,pull,cat,refresh,ls,launch,rm] now')
 
     def _refreshMedia(self,path):
         p = self._shellcmd('am broadcast -a android.intent.action.MEDIA_MOUNTED -d file://' + path)
