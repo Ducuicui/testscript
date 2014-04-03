@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # coding:utf-8
 
+from devicewrapper.android import device as d
+import commands
 import subprocess
 import os
 import string
@@ -20,55 +22,58 @@ usage:
 ------------------------------------------------------------------------------------------------------------
 | adbcmd('ls','/sdcard/')                      |  get the file number under path /sdcard/,return number    |                         
 ------------------------------------------------------------------------------------------------------------    
-| adbcmd('delete','xxxx/xxxx.jpg')             |  delete xxxx/xxx.jpg,return true/false                    |
------------------------------------------------------------------------------------------------------------- 
-| adbcmd('export')                             |  export ANDROID_SERIAL,only support 1 device              |
+| adbcmd('rm','xxxx/xxxx.jpg')                 |  delete xxxx/xxx.jpg,return true/false                    |
 ------------------------------------------------------------------------------------------------------------ 
 | adbcmd('launch','com.intel.camera22/.Camera')|  launch social camera app,return adb commands             |
 ------------------------------------------------------------------------------------------------------------
 '''
 
 def adbcmd(action,path=None,t_path=None):
+    #export android serial
+    if not os.environ.has_key(ANDROID_SERIAL):
+        _exportANDROID_SERIAL()
+    #adb commands
     action1={
-    'refresh':refreshMedia,
-    'ls':getFileNumber,
-    'cat':catFile,
-    'launch':launchActivity,
-    'delete':deleteFile
+    'refresh':_refreshMedia,
+    'ls':_getFileNumber,
+    'cat':_catFile,
+    'launch':_launchActivity,
+    'rm':_deleteFile
      }
     action2=['pull','push']
     if action in action1:
         action1.get(action)(path)
     elif action in action2:
         pushpullFile(action,path,t_path)
-    elif action == 'export':
-        exportANDROID_SERIAL()
     else:
         raise Exception('commands is unsupported,only support [push,pull,cat,refresh,ls,launch,delete,export] now')
 
-def refreshMedia(path):
+def _refreshMedia(path):
     p = _shellcmd('am broadcast -a android.intent.action.MEDIA_MOUNTED -d file://' + path)
     out = p.stdout.read().strip()
+    print out
     if 'result=0' in out:
         return True
     else:
         return False
 
-def getFileNumber(path):
+def _getFileNumber(path):
     p = _shellcmd('ls ' + path + ' | wc -l')
     out = p.stdout.read().strip()
+    print out
     return out
 
-def launchActivity(component):
+def _launchActivity(component):
     p = _shellcmd('am start -n ' + component)
     return p
 
-def catFile(path):
+def _catFile(path):
     p = _shellcmd('cat ' + path)
     out = p.stdout.read().strip()
+    print out
     return out
 
-def deleteFile(path):
+def _deleteFile(path):
     p = _shellcmd('rm -r  ' + path)
     p.wait()
     number = getFileNumber(path)
@@ -77,7 +82,7 @@ def deleteFile(path):
     else:
         return False
 
-def pushpullFile(action,path,t_path):
+def _pushpullFile(action,path,t_path):
     beforeNO = getFileNumber(t_path)
     p = _cmd(action + ' ' + path + ' ' + t_path)
     p.wait()
@@ -87,7 +92,7 @@ def pushpullFile(action,path,t_path):
     else:
         return False
 
-def exportANDROID_SERIAL():
+def _exportANDROID_SERIAL():
     #get device number
     device_number = _getDeviceNumber()
     #export ANDROID_SERIAL=xxxxxxxx
@@ -110,27 +115,6 @@ def _getDeviceNumber():
     else:
         return device_number
 
-'''
-def _getApplicationActivity(app):
-    application = {'camera':'com.intel.camera22/.Camera',
-                    'setting':'com.android.settings/.Settings',
-                    'contact':'com.android.contacts/.activities.PeopleActivity',
-                    'message':'com.android.mms/.ui.ConversationList',
-                    'gallery':'com.intel.android.gallery3d/.app.Gallery',
-                    'browser':'com.android.browser/.BrowserActivity',
-                    'soundrecorder':'com.android.soundrecorder/.SoundRecorder'}
-    #get all support application
-    all_application = str(application.keys())
-    if app not in all_application:
-        print 'applicaiton name is wrong, only support ' + all_application
-    else:
-        #get the value of app
-        return application.get(app)
-        #start activity
-        #return d.start_activity(component = component)
-'''
-
-
 def _shellcmd(func):
     #export ANDROID_SERIAL=xxxxx
     #run exportANDROID_SERIAL() before
@@ -143,4 +127,8 @@ def _cmd(func):
     cmd = ADB + ' ' + func
     return subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
+
+
+if __name__ == '__main__':
+    adbcmd('cat','/data/data/com.intel.camera22/shared_prefs/com.intel.camera22_preferences_0.xml')
 
