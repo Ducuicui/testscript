@@ -167,9 +167,3 @@ class Adb():
 
 
 
-if __name__ == '__main__':
-    u=Util()
-    adb=Adb()
-    adb.cmd('refresh','/sdcard/')
-
-
