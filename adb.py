@@ -125,8 +125,3 @@ class Adb():
         cmd = ADB + ' ' + func
         return subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
-
-
-if __name__ == '__main__':
-    adb=Adb()
-    adb.cmd('push','/home/test/github/util.py','/sdcard/')
