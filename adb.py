@@ -54,9 +54,9 @@ class Adb():
 
     def _refreshMedia(self,path):
         p = self._shellcmd('am broadcast -a android.intent.action.MEDIA_MOUNTED -d file://' + path)
-        self.out = p.stdout.read().strip()
-        print self.out
-        if 'result=0' in self.out:
+        out = p.stdout.read().strip()
+        print out
+        if 'result=0' in out:
             return True
         else:
             return False
