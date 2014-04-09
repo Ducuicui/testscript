@@ -67,7 +67,7 @@ class Adb():
         return out
 
     def _launchActivity(self,component):
-        p = self_shellcmd('am start -n ' + component)
+        p = self._shellcmd('am start -n ' + component)
         return p
 
     def _catFile(self,path):
