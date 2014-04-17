@@ -31,11 +31,10 @@ usage:  adb=Adb()
 
 class Adb():
 
-    def cmd(self,action,path=None,t_path=None):
+    def cmd(self,action,path,t_path=None):
         #export android serial
         if not os.environ.has_key(ANDROID_SERIAL):
             self._exportANDROID_SERIAL()
-
         #adb commands
         action1={
         'refresh':self._refreshMedia,
@@ -46,16 +45,15 @@ class Adb():
         }
         action2=['pull','push']
         if action in action1:
-            action1.get(action)(path)
+            return action1.get(action)(path)
         elif action in action2:
-            self._pushpullFile(action,path,t_path)
+            return self._pushpullFile(action,path,t_path)
         else:
             raise Exception('commands is unsupported,only support [push,pull,cat,refresh,ls,launch,rm] now')
 
     def _refreshMedia(self,path):
         p = self._shellcmd('am broadcast -a android.intent.action.MEDIA_MOUNTED -d file://' + path)
         out = p.stdout.read().strip()
-        print out
         if 'result=0' in out:
             return True
         else:
@@ -64,7 +62,8 @@ class Adb():
     def _getFileNumber(self,path):
         p = self._shellcmd('ls ' + path + ' | wc -l')
         out = p.stdout.read().strip()
-        return out
+        return string.atoi(out)
+
 
     def _launchActivity(self,component):
         p = self._shellcmd('am start -n ' + component)
@@ -89,7 +88,7 @@ class Adb():
         p = self._t_cmd(action + ' ' + path + ' ' + t_path)
         p.wait()
         afterNO = self._getFileNumber(t_path)
-        if string.atoi(afterNO) > string.atoi(beforeNO):
+        if afterNO > beforeNO:
             return True
         else:
             return False
